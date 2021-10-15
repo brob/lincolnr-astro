@@ -1,0 +1,56 @@
+---
+import {createRequire} from 'node:module';
+import LikeButton from '../../components/LikeButton.js'
+const {slug} = Astro.request.params;
+const {image} = Astro.props;
+
+export async function getStaticPaths() {
+const require = createRequire(import.meta.url);
+const client = require('../../utils/sanity.js')
+const imageUrlBuilder = require('@sanity/image-url')
+const builder = imageUrlBuilder(client)
+
+function urlFor(source) {
+  return builder.image(source)
+}
+
+const query = `*[_type == "imageDoc"]{
+        _createdAt,
+        _id,
+        ...,
+        "imageUrl": image.asset->url,
+        "slug": slug.current,
+        "count": coalesce(count, 0)
+    }| order(_createdAt desc)`
+const images = await client.fetch(query)
+const routes = images.map(image => ({
+    params: {
+        slug: image.slug
+    }
+}
+))
+console.log(routes)
+    return images.map(image => ({
+        params: {
+            slug: image.slug
+        },
+        props: {
+            image: {
+                ...image,
+                imageUrl: urlFor(image.image)
+
+            }
+        }
+    }
+    ));
+}
+
+
+
+// console.log(image)
+---
+
+<h1>{slug}</h1>
+<LikeButton client:visible id={image._id} likeCount={image.count}>Hi</LikeButton>
+{image.caption}
+<img src={image.imageUrl} width="500" />

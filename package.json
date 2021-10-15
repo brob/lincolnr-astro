@@ -1,0 +1,22 @@
+{
+  "name": "@example/blog",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "devDependencies": {
+    "@astrojs/renderer-preact": "^0.2.2",
+    "@astrojs/renderer-react": "^0.2.2",
+    "astro": "^0.20.12",
+    "react-dom": "^17.0.2"
+  },
+  "dependencies": {
+    "@sanity/client": "^2.21.3",
+    "@sanity/image-url": "^1.0.1",
+    "contentful": "^9.1.3"
+  }
+}
